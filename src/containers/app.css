@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'DEC Terminal Modern Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('DEC Terminal Modern Regular'), url('_decterm.woff') format('woff');
+}
+
+h1 {
+    font-family: "DEC Terminal Modern Regular", sans-serif;
+}
