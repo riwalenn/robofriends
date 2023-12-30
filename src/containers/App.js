@@ -1,49 +1,43 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect } from 'react';
 import CardList from "../components/CardList";
 import SearchBox from "../components/SearchBox";
 import Scroll from "../components/Scroll";
 import './app.css';
 import ErrorBoundary from "./ErrorBoundary";
 
-class App extends Component {
-    constructor() {
-        super();
-        this.state = {
-            robots: [],
-            searchfield: ''
-        }
-    }
+function App() {
+    const [robots, setRobots] = useState([]);
+    const [searchfield, setSearchfield] = useState('');
 
-    componentDidMount() {
+    useEffect(() => {
         fetch('https://jsonplaceholder.cypress.io/users')
             .then(response => response.json())
-            .then(users => this.setState({ robots: users }));
-    }
+            .then(users => {
+                setRobots(users)
+            });
+    }, []);
 
-    onSearchChange = (event) => {
-        this.setState({ searchfield: event.target.value });
-    }
+    const onSearchChange = (event) => {
+        setSearchfield(event.target.value);
+    };
 
-    render() {
-        const { robots, searchfield } = this.state;
-        const filteredRobots = robots.filter(r => {
-            return r.name.toLowerCase().includes(searchfield.toLowerCase())
-        });
+    const filteredRobots = robots.filter(r => {
+        return r.name.toLowerCase().includes(searchfield.toLowerCase())
+    });
 
-        return !robots.length ?
-            <h1 className='white tc'>No user. Please create one.</h1> :
-            (
-                <div className='tc code'>
-                    <h1 className='white f1'>RoboFriends</h1>
-                    <SearchBox searchChange={this.onSearchChange} />
-                    <Scroll>
-                        <ErrorBoundary fallback={<p>Something went wrong</p>}>
-                            <CardList robots={filteredRobots} />
-                        </ErrorBoundary>
-                    </Scroll>
-                </div>
-            );
-    }
+    return !robots.length ?
+        <h1 className='white tc'>No user. Please create one.</h1> :
+        (
+            <div className='tc code'>
+                <h1 className='white f1'>RoboFriends</h1>
+                <SearchBox searchChange={onSearchChange}/>
+                <Scroll>
+                    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+                        <CardList robots={filteredRobots}/>
+                    </ErrorBoundary>
+                </Scroll>
+            </div>
+        );
 }
 
 export default App;
